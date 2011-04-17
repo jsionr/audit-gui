@@ -48,7 +48,7 @@ class MainDialog(QMainWindow):
         self.ui.statusBar.showMessage("Hello %s!" % login, 10000)
         
     def __show_logs_dialog(self):
-        dialog = LogsDialog()
+        dialog = LogsDialog(self)
         dialog.show()
         
     def __choose_path(self):

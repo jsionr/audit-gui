@@ -11,7 +11,7 @@ from PyQt4.QtGui import QDialog
 
 class LogsDialog(QDialog):
     
-    def __init__(self):
-        super(LogsDialog, self).__init__()
+    def __init__(self, parent):
+        super(LogsDialog, self).__init__(parent)
         self.ui = uic.loadUi("layouts/logs.ui", self)
 
