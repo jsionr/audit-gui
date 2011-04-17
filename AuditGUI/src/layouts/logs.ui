@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>781</width>
+    <height>526</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Log analysis and visualization</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_5">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Chart</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QWebView" name="webView">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="url">
+             <url>
+              <string>https://chart.googleapis.com/chart?cht=lc&amp;chco=FF0000,00FF00,0000FF&amp;chs=400x300&amp;chd=s:FOETHECat,lkjtf3asv,KATYPSNXJ&amp;chxt=x,y&amp;chxl=0:|Oct|Nov|Dec|1:||20K||60K||100K</string>
+             </url>
+            </property>
+            <property name="renderHints">
+             <set>QPainter::Antialiasing|QPainter::HighQualityAntialiasing|QPainter::SmoothPixmapTransform|QPainter::TextAntialiasing</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Statistics</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QTreeWidget" name="treeWidget">
+            <attribute name="headerVisible">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="headerVisible">
+             <bool>false</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Name</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Access count</string>
+             </property>
+            </column>
+            <item>
+             <property name="text">
+              <string>All</string>
+             </property>
+             <property name="text">
+              <string>54535</string>
+             </property>
+             <item>
+              <property name="text">
+               <string>rule1</string>
+              </property>
+              <property name="text">
+               <string>42342</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>file1</string>
+               </property>
+               <property name="text">
+                <string>2134</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>file2</string>
+               </property>
+               <property name="text">
+                <string>24443</string>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>rule2</string>
+              </property>
+              <property name="text">
+               <string>32131</string>
+              </property>
+             </item>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Details</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="minimumSize">
+           <size>
+            <width>350</width>
+            <height>0</height>
+           </size>
+          </property>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>50</number>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>50</number>
+          </attribute>
+          <column>
+           <property name="text">
+            <string>User</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>PID</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>R</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>W</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>X</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>A</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QProgressBar" name="progressBar">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+       <property name="format">
+        <string>1500 entry processed</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_2">
+       <property name="text">
+        <string>Odśwież</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton_3">
+       <property name="text">
+        <string>Zamknij</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QWebView</class>
+   <extends>QWidget</extends>
+   <header>QtWebKit/QWebView</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
