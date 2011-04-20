@@ -19,7 +19,7 @@ def main():
     main_window = MainDialog()
     main_window.resize(800, 600)
     main_window.show()
-    
+
     sys.exit(app.exec_())
 
 
