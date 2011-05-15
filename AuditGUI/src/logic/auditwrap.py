@@ -240,7 +240,7 @@ def _execute(command, getError=False):
                             stderr=subprocess.PIPE).communicate()[1 if getError else 0]
 
 if os.getuid() != 0:
-    raise AuditwrapError("You have to be root to use this module (try \"sudo python ...\").")
+    raise AuditwrapError("You have to be root to use this module.")
 
 __all__ = [isDaemonRunning, setDaemonRunning, getActiveRules, addActiveRule, removeActiveRule, getEvents,
            FileWatchRule, FileWatchEvent]

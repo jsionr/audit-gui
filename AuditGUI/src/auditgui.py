@@ -11,8 +11,6 @@ import logging
 
 from PyQt4 import QtGui
 
-from dialogs.main import MainDialog
-
 
 log = logging.getLogger("auditgui")
 
@@ -32,6 +30,12 @@ def main():
         os.chdir('src')
 
     app = QtGui.QApplication(sys.argv)
+
+    try:
+        from dialogs.main import MainDialog
+    except Exception, e:
+        log.error("Error: %s" % e)
+        return
 
     log.info("Loading GUI...")
 
