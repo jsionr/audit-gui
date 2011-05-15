@@ -1,7 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import subprocess, shlex, os, time
+import subprocess
+import shlex
+import os
+import time
+import re
 
 # --- <INTERFACE> ---
 
@@ -107,39 +111,37 @@ class FileWatchEvent:
     Wartosci liczbowe beda resolvowane do nazw (dotyczy to chyba tylko syscalla i uid/guid/fsuid/...).
     """
 
+    re_attrs = re.compile("(\w+)=(\S+)")
+    re_time = re.compile(r".*(\d\d\.\d\d\.\d\d\d\d \d\d:\d\d:\d\d)\.(\d+):(\d+).*")
+
     def __init__(self, paths, cwd, syscall):
         """
         Konstruktor parsujacy kilka odpowiednio wycietych linijek outputu ausearch'a.
         """
         self.fileNames = []
-        for p in paths:
-            namep = p.find("name=") + 5
-            nexteqp = p.find("=", namep)
-            nextp = p.rfind(" ", namep, nexteqp)
-            self.fileNames.append(p[namep:nextp])
-        self.workingDir = cwd[cwd.find("cwd="):len(cwd) - 1]
-        fdotp = syscall.find(".")
-        self.time = time.strptime(syscall[syscall.find("audit(") + 6:fdotp], "%m/%d/%Y %H:%M:%S")
-        self.timeMilliseconds = int(syscall[fdotp + 1:syscall.find(":", fdotp)])
-        self.attributes = {}
-        attrs = syscall[syscall.find(") :") + 4:len(syscall) - 1]
-        startp = 0
-        while True:
-            nreqp = attrs.find("=", startp)
-            if nreqp == -1:
-                break
-            nexteqp = attrs.find("=", nreqp + 1)
-            if (nexteqp == -1):
-                nrsp = len(attrs)
-            else:
-                nrsp = attrs.rfind(" ", startp, nexteqp)
-            self.attributes[attrs[startp:nreqp]] = attrs[nreqp + 1:nrsp]
-            startp = nrsp + 1
+        for path in paths:
+            attrs = self.__get_attrs(path)
+            self.fileNames.append(attrs['name'])
+
+        attrs = self.__get_attrs(cwd)
+        self.workingDir = attrs['cwd']
+
+        timegroups = re.match(self.re_time, syscall).groups()
+        try:
+            self.time = time.strptime(timegroups[0], "%m/%d/%Y %H:%M:%S")
+        except:
+            self.time = time.strptime(timegroups[0], "%d.%m.%Y %H:%M:%S")
+        self.timeMilliseconds = int(timegroups[1])
+
+        self.attributes = self.__get_attrs(syscall)
+
+    def __get_attrs(self, line):
+        return dict(re.findall(self.re_attrs, line))
 
     def __repr__(self):
         return "At: " + time.strftime("%d.%m.%Y %H:%M:%S", self.time) + "." + str(self.timeMilliseconds) + \
             "\nIn working dir: " + self.workingDir + "\nFiles: " + str(self.fileNames) + "\nAttributes: " + \
-            str(self.attributes) + "\n-"
+            str(self.attributes) + "\n"
 
 def isDaemonRunning():
     """
