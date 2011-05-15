@@ -131,9 +131,12 @@ class LogsViewer(QObject):
 
 class DataBuilder(QThread):
 
-    rule_key = ""
-    status = auditwrap.ProcessingStatus()
-    data = {}
+    def __init__(self, parent):
+        super(DataBuilder, self).__init__(parent)
+
+        self.rule_key = ""
+        self.status = auditwrap.ProcessingStatus()
+        self.data = {}
 
     def run(self):
         if self.rule_key:
