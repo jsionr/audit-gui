@@ -72,7 +72,7 @@
        <item row="2" column="0">
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Name:</string>
+          <string>Name*:</string>
          </property>
         </widget>
        </item>
@@ -82,14 +82,14 @@
        <item row="3" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Path:</string>
+          <string>Path*:</string>
          </property>
         </widget>
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Permission filter:</string>
+          <string>Permission filter*:</string>
          </property>
         </widget>
        </item>
@@ -227,7 +227,6 @@
    <addaction name="menuAuditd"/>
    <addaction name="menuHelp"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QToolBar" name="toolbarMain">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -239,6 +238,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
+  <widget class="QStatusBar" name="statusBar"/>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>

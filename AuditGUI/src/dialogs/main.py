@@ -167,8 +167,8 @@ class RuleEditor(QObject):
     def __add_rule(self):
         log.info("Adding new rule...")
 
-        name = str(self.__ui.textName.text())
-        path = str(self.__ui.textPath.text())
+        name = str(self.__ui.textName.text()).strip()
+        path = str(self.__ui.textPath.text()).strip()
         fields = str(self.__ui.textRule.text()).strip() or None
 
         perm = []
@@ -180,30 +180,34 @@ class RuleEditor(QObject):
             perm.append("x")
         if self.__ui.checkA.isChecked():
             perm.append("a")
+        perm_str = "".join(perm)
+
+        if not name or not path or not perm_str:
+            return self.__warning("Rule", "Cannot add rule! Fill in the required fields.")
 
         try:
-            rule = auditwrap.FileWatchRule(name, path, "".join(perm), fields)
+            rule = auditwrap.FileWatchRule(name, path, perm_str, fields)
             auditwrap.addActiveRule(rule)
         except auditwrap.AuditwrapError, e:
-            self.__error("Adding rule", "Cannot add rule: %s" % e)
+            self.__error("Rule", "Cannot add rule: %s" % e)
         else:
-            log.info("Rule %s has been added" % name)
-            QTimer.singleShot(1000, self.__dialog.rule_viewer.refresh)
+            self.__info("Rule", "Rule '%s' has been added" % name)
+            self.__dialog.rule_viewer.refresh()
 
     def __del_rule(self):
         log.info("Deleting new rule...")
 
         if not self.__loaded_rule:
-            return self.__warning("Deleting rule", "Cannot delete: no selected rule")
+            return self.__warning("Rule", "Cannot delete: no selected rule")
 
         try:
             auditwrap.removeActiveRule(self.__loaded_rule)
         except auditwrap.AuditwrapError, e:
-            self.__error("Deleting rule", "Cannot delete rule: %s" % e)
+            self.__error("Rule", "Cannot delete rule: %s" % e)
         else:
-            log.info("Rule %s has been deleted" % self.__loaded_rule.key)
+            self.__info("Rule", "Rule '%s' has been deleted" % self.__loaded_rule.key)
             self.clear()
-            QTimer.singleShot(1000, self.__dialog.rule_viewer.refresh)
+            self.__dialog.rule_viewer.refresh()
 
     def __error(self, title, desc):
         QMessageBox.warning(self.__dialog, title, desc)
@@ -213,8 +217,11 @@ class RuleEditor(QObject):
         QMessageBox.warning(self.__dialog, title, desc)
         log.warning(desc)
 
-    def __info(self, title, desc):
-        QMessageBox.information(self.__dialog, title, desc)
+    def __info(self, title, desc, msg_box=False, status=True):
+        if msg_box:
+            QMessageBox.information(self.__dialog, title, desc)
+        if status:
+            self.__dialog.statusBar.showMessage(desc, 30000)
         log.info(desc)
 
 
