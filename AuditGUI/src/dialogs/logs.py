@@ -11,9 +11,7 @@ from PyQt4 import uic
 from PyQt4.QtCore import QObject
 from PyQt4.QtCore import QThread
 from PyQt4.QtCore import QTimer
-from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtGui import QDialog
-from PyQt4.QtGui import QLabel
 
 from logic import auditwrap
 
