@@ -75,6 +75,7 @@ class FileWatchRule:
             fs += " -F \"" + f + "\""
         return "\"" + self.path + "\" -p \"" + self.perm + "\" -k \"" + self.key + "\"" + fs
 
+
 class FileWatchEvent:
     """
     Pojedynczy event dotyczacy file watcha czytany z loga (grupa wpisow o tym samym msg id)
@@ -143,6 +144,15 @@ class FileWatchEvent:
             "\nIn working dir: " + self.workingDir + "\nFiles: " + str(self.fileNames) + "\nAttributes: " + \
             str(self.attributes) + "\n"
 
+
+class ProcessingStatus(object):
+
+    def __init__(self):
+        self.current = 0
+        self.total = 0
+        self.desc = ""
+
+
 def isDaemonRunning():
     """
     No domysl sie.
@@ -197,12 +207,17 @@ def removeActiveRule(rule):
     if err != "":
         raise AuditwrapError(err)
 
-def getEvents(key):
+def getEvents(key, status=None):
     """
     Zwraca liste FileWatchEventow pobranych z loga auditda wg zapodanego klucza.
     """
+    if not status:
+        status = ProcessingStatus()
+
     ret = []
-    for element in _execute("ausearch -i -k \"" + key + "\"").split("----"):
+    elements = _execute("ausearch -i -k \"" + key + "\"").split("----")
+    status.total = len(elements)
+    for i, element in enumerate(elements):
         paths = []
         cwd = None
         syscall = None
@@ -215,6 +230,7 @@ def getEvents(key):
                 syscall = line
         if len(paths) > 0 and cwd != None and syscall != None:
             ret.append(FileWatchEvent(paths, cwd, syscall))
+        status.current = i + 1
     return ret
 
 # --- </INTERFACE> ---

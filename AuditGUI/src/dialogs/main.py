@@ -76,7 +76,13 @@ class MainDialog(QMainWindow):
         self.ui.statusBar.showMessage("Hello %s!" % login, 10000)
 
     def __show_logs_dialog(self):
-        dialog = LogsDialog(self)
+        idx = self.rule_viewer.selected_row
+        if idx >= 0:
+            sel_rul = self.rule_viewer.get_rule(idx)
+            dialog = LogsDialog(self, sel_rul.key)
+
+        else:
+            dialog = LogsDialog(self)
         dialog.show()
 
     def __choose_path(self):
@@ -95,6 +101,7 @@ class RuleViewer(QObject):
     def __init__(self, dialog):
         super(RuleViewer, self).__init__(dialog)
 
+        self.selected_row = -1
         self.__dialog = dialog
         self.__ui = dialog.ui
         self.__table = dialog.ui.tableRules
@@ -104,6 +111,7 @@ class RuleViewer(QObject):
     def refresh(self):
         log.info("Refresh rules")
 
+        self.selected_row = -1
         self.__table.clearContents()
         self.__table.setRowCount(0)
         self.__rules = auditwrap.getActiveRules()
@@ -114,7 +122,12 @@ class RuleViewer(QObject):
         return self.__rules[index]
 
     def __install(self):
-        self.__table.cellClicked.connect(lambda row, col: self.onRowSelected.emit(row))
+        self.__table.cellClicked.connect(self.__on_selected)
+
+    def __on_selected(self, row, col):
+        log.info("Selected rule idx: %d" % row)
+        self.selected_row = row
+        self.onRowSelected.emit(row)
 
     def __insert_row(self, values):
         rows = self.__table.rowCount()
