@@ -1,6 +1,7 @@
-#Sun Apr 17 20:54:03 CEST 2011
+#Sun May 15 12:43:29 CEST 2011
 eclipse.preferences.version=1
 encoding//src/auditgui.py=utf-8
 encoding//src/dialogs/__init__.py=utf-8
 encoding//src/dialogs/logs.py=utf-8
 encoding//src/dialogs/main.py=utf-8
+encoding//src/logic/auditwrap.py=utf-8
