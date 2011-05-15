@@ -24,7 +24,7 @@
     <item>
      <widget class="QTableWidget" name="tableRules">
       <property name="gridStyle">
-       <enum>Qt::DashLine</enum>
+       <enum>Qt::DotLine</enum>
       </property>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>120</number>
@@ -44,7 +44,7 @@
       </column>
       <column>
        <property name="text">
-        <string>Permission filter</string>
+        <string>Permission</string>
        </property>
       </column>
       <column>

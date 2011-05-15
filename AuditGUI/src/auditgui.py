@@ -19,9 +19,8 @@ log = logging.getLogger("auditgui")
 
 def configure_logging():
     format = '%(levelname)-8s %(name)-20s %(message)s'
-    logging.basicConfig(format=format)
-    logging.getLogger("dialogs").setLevel(logging.DEBUG)
-    logging.getLogger("core").setLevel(logging.DEBUG)
+    logging.basicConfig(format=format, level=logging.DEBUG)
+    logging.getLogger("PyQt4").setLevel(logging.WARNING)
 
 
 def main():
