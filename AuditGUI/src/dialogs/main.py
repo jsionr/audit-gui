@@ -13,6 +13,7 @@ from PyQt4.QtCore import QObject
 from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtCore import QSize
 from PyQt4.QtCore import QTimer
+from PyQt4.QtGui import QIcon
 from PyQt4.QtGui import QMainWindow
 from PyQt4.QtGui import QAction
 from PyQt4.QtGui import QLabel
@@ -36,11 +37,12 @@ class MainDialog(QMainWindow):
         self.__setup()
 
     def __init_gui(self):
-        self.a_new = QAction("New", self)
-        self.a_save = QAction("Save", self)
-        self.a_load = QAction("Load", self)
+        self.a_new = QAction(QIcon("layouts/icons/new.png"), "New", self)
+        self.a_save = QAction(QIcon("layouts/icons/save.png"), "Save", self)
+        self.a_load = QAction(QIcon("layouts/icons/load.png"), "Load", self)
 
-        self.a_analyze_log = QAction("Log analysis and visualization", self)
+        self.a_analyze_log = QAction(QIcon("layouts/icons/logs.png"),
+                                     "Log analysis and visualization", self)
 
         self.ui.toolbarMain.setIconSize(QSize(24, 24))
         self.ui.toolbarMain.addAction(self.a_new)

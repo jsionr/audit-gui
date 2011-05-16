@@ -40,6 +40,7 @@ def main():
     log.info("Loading GUI...")
 
     main_window = MainDialog()
+    main_window.setWindowIcon(QtGui.QIcon("layouts/icons/app.png"))
     main_window.resize(800, 600)
     main_window.show()
 
