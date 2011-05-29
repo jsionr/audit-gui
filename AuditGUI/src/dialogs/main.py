@@ -177,7 +177,9 @@ class RuleEditor(QObject):
     def __install(self):
         self.__ui.buttonAdd.clicked.connect(self.__add_rule)
         self.__ui.buttonDelete.clicked.connect(self.__del_rule)
+        self.__ui.buttonUpdate.clicked.connect(self.__update_rule)
         self.__ui.buttonClear.clicked.connect(self.clear)
+
 
     def __add_rule(self):
         log.info("Adding new rule...")
@@ -233,6 +235,20 @@ class RuleEditor(QObject):
             self.__info("Rule", "Rule '%s' has been deleted" % self.__loaded_rule.key)
             self.clear()
             self.__dialog.rule_viewer.refresh()
+
+    def __update_rule(self):
+        log.info("Updating rule...")
+
+        if not self.__loaded_rule:
+            return self.__warning("Rule", "Cannot update: no selected rule")
+
+        try:
+            auditwrap.removeActiveRule(self.__loaded_rule)
+        except auditwrap.AuditwrapError, e:
+            self.__error("Rule", "Cannot update rule: %s" % e)
+        else:
+            self.__info("Rule", "Rule '%s' has been deleted" % self.__loaded_rule.key)
+            self.__add_rule()
 
     def __error(self, title, desc):
         QMessageBox.warning(self.__dialog, title, desc)

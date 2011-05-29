@@ -251,21 +251,17 @@ class DataBuilder(QThread):
                         continue
                     if len(self.filter.prog) > 0 and re.match(prog_pattern, exe) is None:
                         continue
-                    if self.filter.type != 'all' and syscall != type:
+                    if self.filter.type != 'all' and syscall != self.filter.type:
                         continue
                     ##TODO rule
 
 
                 for file in event.fileNames:
-                    log.info(file)
                     if file.startswith('/'):
                         path = file
                     else:
                         path = os.path.join(event.workingDir, file.lstrip('./'))
                     path.rstrip('/')
-
-
-                    log.info(path)
 
                     if self.filter is not None and re.match(self.filter.path, path) is None:
                         continue
