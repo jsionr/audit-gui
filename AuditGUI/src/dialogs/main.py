@@ -116,7 +116,7 @@ class RuleViewer(QObject):
         self.selected_row = -1
         self.__table.clearContents()
         self.__table.setRowCount(0)
-        self.__rules = auditwrap.getActiveRules()
+        self.__rules = auditwrap.getMainRules().keys()
         for rule in self.__rules:
             self.__insert_row([rule.key, rule.path, rule.perm, " ".join(rule.fields)])
 
@@ -186,23 +186,33 @@ class RuleEditor(QObject):
         path = str(self.__ui.textPath.text()).strip()
         fields = str(self.__ui.textRule.text()).strip() or None
 
+        rules = dict()
         perm = []
         if self.__ui.checkR.isChecked():
+            rules['r'] = ''
             perm.append("r")
         if self.__ui.checkW.isChecked():
+            rules['w'] = ''
             perm.append("w")
         if self.__ui.checkX.isChecked():
+            rules['x'] = ''
             perm.append("x")
         if self.__ui.checkA.isChecked():
+            rules['r'] = ''
+            rules['w'] = ''
+            rules['x'] = ''
             perm.append("a")
         perm_str = "".join(perm)
 
-        if not name or not path or not perm_str:
+        if not name or not path or len(rules.keys()) == 0 :
             return self.__warning("Rule", "Cannot add rule! Fill in the required fields.")
 
         try:
-            rule = auditwrap.FileWatchRule(name, path, perm_str, fields)
-            auditwrap.addActiveRule(rule)
+            for perm in rules.keys():
+                rule = auditwrap.FileWatchRule(name + perm, path, perm, fields)
+                rules[perm] = rule
+            mainRule = auditwrap.FileWatchRule(name, path, perm_str, fields)
+            auditwrap.addActiveRule(mainRule, rules.values())
         except auditwrap.AuditwrapError, e:
             self.__error("Rule", "Cannot add rule: %s" % e)
         else:

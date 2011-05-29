@@ -191,6 +191,10 @@ class LogsViewer(QObject):
 
 class DataBuilder(QThread):
 
+    perm_map = {'r' : 'read',
+                'w' : 'write',
+                'x' : 'execute'}
+
     def __init__(self, parent):
         super(DataBuilder, self).__init__(parent)
 
@@ -201,57 +205,93 @@ class DataBuilder(QThread):
 
     def run(self):
         if self.rule_key:
-            self.__process_rule(self.rule_key)
+            rule = None
+            subrules = None
+            for rule_tmp, subrules_tmp in auditwrap.getMainRules().iteritems():
+                if rule_tmp.key == self.rule_key:
+                    rule = rule_tmp
+                    subrules = subrules_tmp
+                    break
+            if rule is not None:
+                self.__process_rule(rule, subrules)
         else:
-            for rule in auditwrap.getActiveRules():
-                self.__process_rule(rule.key)
+            for rule, subrules in auditwrap.getMainRules().iteritems():
+                self.__process_rule(rule, subrules)
 
-    def __process_rule(self, key):
+    def __process_rule(self, rule, subrules):
+
+        key = rule.key
+
         self.status.desc = "Processing rule '%s'..." % key
-        events = auditwrap.getEvents(key, self.status)
+
+        subevents = {}
+
+        for subrule in subrules:
+            events = auditwrap.getEvents(subrule.key, self.status)
+            subevents[subrule.perm] = events
+
         self.status.desc = "Finalizing rule '%s'..." % key
 
         data = self.data.setdefault(key, {})
 
-        for event in events:
-            user = event.attributes.get('uid', '?')
-            pid = event.attributes.get('pid', '?')
-            syscall = event.attributes['syscall']
-            exe = event.attributes.get('exe', '')
-            comm = event.attributes.get('comm', '')
+        for perm, events in subevents.iteritems():
+            for event in events:
+                user = event.attributes.get('uid', '?')
+                pid = event.attributes.get('pid', '?')
+                syscall = DataBuilder.perm_map[perm]
+                exe = event.attributes.get('exe', '')
+                comm = event.attributes.get('comm', '')
 
-            if self.filter is not None:
-                f_uid = self.filter.get_uid()
-                prog_pattern = '.*(' + self.filter.prog + ')+'
-                if len(f_uid) > 0 and user != f_uid:
-                    continue
-                if len(self.filter.pid) > 0 and pid != self.filter.pid:
-                    continue
-                if len(self.filter.prog) > 0 and re.match(prog_pattern, exe) is None:
-                    continue
-                if self.filter.type != 'all' and syscall != type:
-                    continue
-                ##TODO rule
+                if self.filter is not None:
+                    f_uid = self.filter.get_uid()
+                    prog_pattern = '.*(' + self.filter.prog + ')+'
+                    if len(f_uid) > 0 and user != f_uid:
+                        continue
+                    if len(self.filter.pid) > 0 and pid != self.filter.pid:
+                        continue
+                    if len(self.filter.prog) > 0 and re.match(prog_pattern, exe) is None:
+                        continue
+                    if self.filter.type != 'all' and syscall != type:
+                        continue
+                    ##TODO rule
 
 
-            for file in event.fileNames:
-                path = os.path.join(event.workingDir, file.lstrip('./'))
+                for file in event.fileNames:
+                    log.info(file)
+                    if file.startswith('/'):
+                        path = file
+                    else:
+                        path = os.path.join(event.workingDir, file.lstrip('./'))
+                    path.rstrip('/')
 
-                if self.filter is not None and re.match(self.filter.path, path) is None:
-                    continue
 
-                path_data = data.setdefault(path, {})
-                user_data = path_data.setdefault(user, {})
-                pid_data = user_data.setdefault(pid, {'exe': '', 'comm': ''})
+                    log.info(path)
 
-                if syscall not in pid_data:
-                    pid_data[syscall] = 0
-                pid_data[syscall] += 1
+                    if self.filter is not None and re.match(self.filter.path, path) is None:
+                        continue
 
-                if exe:
-                    pid_data['exe'] = exe
-                if comm:
-                    pid_data['comm'] = comm
+                    if path not in data:
+                        path_data = data.setdefault(path, {})
+                    else:
+                        path_data = data[path]
+
+                    if user not in path_data:
+                        user_data = path_data.setdefault(user, {})
+                    else:
+                        user_data = path_data[user]
+                    if pid not in user_data:
+                        pid_data = user_data.setdefault(pid, {'exe': '', 'comm': ''})
+                    else:
+                        pid_data = user_data[pid]
+
+                    if syscall not in pid_data:
+                        pid_data[syscall] = 0
+                    pid_data[syscall] += 1
+
+                    if exe:
+                        pid_data['exe'] = exe
+                    if comm:
+                        pid_data['comm'] = comm
 
 
 

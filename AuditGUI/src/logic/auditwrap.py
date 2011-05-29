@@ -13,7 +13,6 @@ import re
 class AuditwrapError(Exception):
     pass
 
-
 class FileWatchRule:
     """
     Pojedynczy rule, po stworzeniu jest juz tylko read-only.
@@ -153,6 +152,7 @@ class ProcessingStatus(object):
         self.desc = ""
 
 
+
 def isDaemonRunning():
     """
     No domysl sie.
@@ -191,21 +191,53 @@ def getActiveRules():
         ret.append(FileWatchRule(key, path, perm, fields))
     return ret
 
-def addActiveRule(rule):
+def getMainRules():
+
+    active = getActiveRules()
+    rules_tmp = {}
+    for rule in active:
+        if rule.perm in ['r', 'w', 'x'] and rule.key.endswith(rule.perm):
+            key = rule.key[0:-1]
+            if key not in rules_tmp:
+                rules_tmp[key] = [rule]
+            else:
+                rules_tmp[key].append(rule)
+
+    rules = dict()
+    for key in rules_tmp.keys():
+        perm_str = ""
+        path = ""
+        fields = []
+        for rule in rules_tmp[key]:
+            perm_str += rule.perm
+            path = rule.path
+            fields = rule.fields
+        m_rule = FileWatchRule(key, path, perm_str, ' '.join(fields))
+        rules[m_rule] = rules_tmp[key]
+    return rules
+
+def addActiveRule(rule, subrules):
     """
     Dodaje nowa FileWatchRule do auditda.
     """
-    err = _execute("auditctl -w " + rule._composeCommand())
-    if err != "":
-        raise AuditwrapError(err)
+    # rules[rule] = subrules
+    for subrule in subrules:
+        err = _execute("auditctl -w " + subrule._composeCommand())
+        if err != "":
+            raise AuditwrapError(err)
 
 def removeActiveRule(rule):
     """
     Usuwa FileWatchRule z auditda.
     """
-    err = _execute("auditctl -W " + rule._composeCommand())
-    if err != "":
-        raise AuditwrapError(err)
+    rules = getMainRules()
+    for rule_tmp, subrules in rules.iteritems():
+        if rule.key == rule_tmp.key:
+            for subrule in subrules:
+                err = _execute("auditctl -W " + subrule._composeCommand())
+                if err != "":
+                    raise AuditwrapError(err)
+            break
 
 def getEvents(key, status=None):
     """
@@ -215,6 +247,7 @@ def getEvents(key, status=None):
         status = ProcessingStatus()
 
     ret = []
+
     elements = _execute("ausearch -i -k \"" + key + "\"").split("----")
     status.total = len(elements)
     for i, element in enumerate(elements):
