@@ -219,6 +219,7 @@ class RuleEditor(QObject):
             self.__error("Rule", "Cannot add rule: %s" % e)
         else:
             self.__info("Rule", "Rule '%s' has been added" % name)
+            self.clear()
             self.__dialog.rule_viewer.refresh()
 
     def __del_rule(self):
