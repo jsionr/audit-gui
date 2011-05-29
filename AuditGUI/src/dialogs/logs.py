@@ -6,6 +6,7 @@ Created on 2011-04-17
 '''
 import os
 import logging
+import re
 
 from PyQt4 import uic
 from PyQt4.QtCore import QObject
@@ -14,6 +15,7 @@ from PyQt4.QtCore import QTimer
 from PyQt4.QtGui import QDialog
 
 from logic import auditwrap
+from auditgui import log
 
 
 log = logging.getLogger(__name__)
@@ -37,7 +39,62 @@ class LogsDialog(QDialog):
         self.__logs_viewer = LogsViewer(self)
         self.ui.buttonRefresh.clicked.connect(self.__logs_viewer.refresh)
         self.__logs_viewer.refresh()
+        self.__data_filter = DataFilter(self, self.__logs_viewer)
 
+
+class DataFilter(QObject):
+
+    def __init__(self, dialog, logs_viewer):
+        super(DataFilter, self).__init__(dialog)
+
+        self.__logs_viewer = logs_viewer
+        self.__dialog = dialog
+        self.__ui = dialog.ui
+        self.__logs = dialog.ui.logs
+
+        self.__init_logic()
+
+    def __init_logic(self):
+        self.__ui.buttonFilter.clicked.connect(self.apply_filter)
+        self.__ui.buttonClear.clicked.connect(self.clear)
+
+    def apply_filter(self):
+        filter = Filter()
+        filter.path = str(self.__ui.pathInput.text()).strip()
+        filter.user = str(self.__ui.userInput.text()).strip()
+        filter.pid = str(self.__ui.pidInput.text()).strip()
+        filter.prog = str(self.__ui.execInput.text()).strip()
+        filter.type = str(self.__ui.typeBox.itemText(self.__ui.typeBox.currentIndex()));
+        filter.rule = str(self.__ui.ruleInput.text()).strip()
+
+        self.__logs_viewer.set_filter(filter)
+        self.__logs_viewer.refresh()
+
+
+    def clear(self):
+        self.__ui.pathInput.setText('')
+        self.__ui.userInput.setText('')
+        self.__ui.pidInput.setText('')
+        self.__ui.execInput.setText('')
+        self.__ui.typeBox.setCurrentIndex(0)
+        self.__ui.ruleInput.setText('')
+
+        self.__logs_viewer.set_filter(None)
+
+
+class Filter(object):
+
+    def __init__(self):
+        self.path = ''
+        self.user = ''
+        self.pid = ''
+        self.prog = ''
+        self.type = ''
+        self.rule = ''
+
+    def get_uid(self):
+        ##TODO
+        return self.user
 
 class LogsViewer(QObject):
 
@@ -48,6 +105,7 @@ class LogsViewer(QObject):
         self.__ui = dialog.ui
         self.__logs = dialog.ui.logs
         self.__data_builder = None
+        self.__filter = None
 
     def refresh(self):
         log.info("Refreshing logs...")
@@ -58,6 +116,7 @@ class LogsViewer(QObject):
         self.__logs.clear()
 
         self.__data_builder = DataBuilder(self.__dialog)
+        self.__data_builder.filter = self.__filter;
         self.__data_builder.rule_key = self.__dialog.rule_key
         self.__data_builder.finished.connect(self.__show_data)
         self.__data_builder.start()
@@ -65,6 +124,9 @@ class LogsViewer(QObject):
         self.__status_updater = QTimer(self.__dialog)
         self.__status_updater.timeout.connect(self.__update_status)
         self.__status_updater.start(1000)
+
+    def set_filter(self, filter):
+        self.__filter = filter
 
     def __show_data(self):
         log.info("Showing data...")
@@ -132,6 +194,7 @@ class DataBuilder(QThread):
     def __init__(self, parent):
         super(DataBuilder, self).__init__(parent)
 
+        self.filter = None
         self.rule_key = ""
         self.status = auditwrap.ProcessingStatus()
         self.data = {}
@@ -157,8 +220,25 @@ class DataBuilder(QThread):
             exe = event.attributes.get('exe', '')
             comm = event.attributes.get('comm', '')
 
+            if self.filter is not None:
+                f_uid = self.filter.get_uid()
+                prog_pattern = '.*(' + self.filter.prog + ')+'
+                if len(f_uid) > 0 and user != f_uid:
+                    continue
+                if len(self.filter.pid) > 0 and pid != self.filter.pid:
+                    continue
+                if len(self.filter.prog) > 0 and re.match(prog_pattern, exe) is None:
+                    continue
+                if self.filter.type != 'all' and syscall != type:
+                    continue
+                ##TODO rule
+
+
             for file in event.fileNames:
                 path = os.path.join(event.workingDir, file.lstrip('./'))
+
+                if self.filter is not None and re.match(self.filter.path, path) is None:
+                    continue
 
                 path_data = data.setdefault(path, {})
                 user_data = path_data.setdefault(user, {})
@@ -172,4 +252,6 @@ class DataBuilder(QThread):
                     pid_data['exe'] = exe
                 if comm:
                     pid_data['comm'] = comm
+
+
 

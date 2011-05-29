@@ -20,10 +20,149 @@
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
         <widget class="QTextEdit" name="logs">
+         <property name="minimumSize">
+          <size>
+           <width>580</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
         </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetDefaultConstraint</enum>
+       </property>
+       <item>
+        <widget class="QLabel" name="filterLab">
+         <property name="text">
+          <string>Apply filter:</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="2">
+          <widget class="QLineEdit" name="pathInput"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="userLab">
+           <property name="text">
+            <string>User:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLineEdit" name="userInput"/>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="pidLab">
+           <property name="text">
+            <string>Pid:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLineEdit" name="pidInput"/>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="typeLab">
+           <property name="text">
+            <string>Type:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QComboBox" name="typeBox">
+           <item>
+            <property name="text">
+             <string>all</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>read</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>write</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>execute</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="ruleLab">
+           <property name="text">
+            <string>Rule:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QLineEdit" name="ruleInput"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="pathLab">
+           <property name="text">
+            <string>Path:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="programLab">
+           <property name="text">
+            <string>Program:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLineEdit" name="execInput"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QPushButton" name="buttonClear">
+           <property name="text">
+            <string>Clear</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonFilter">
+           <property name="text">
+            <string>Filter</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
@@ -48,6 +187,13 @@
       <widget class="QPushButton" name="buttonRefresh">
        <property name="text">
         <string>Refresh</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonSave">
+       <property name="text">
+        <string>Save</string>
        </property>
       </widget>
      </item>
