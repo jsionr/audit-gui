@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>widget</class>
+ <widget class="QWidget" name="widget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
+    <width>788</width>
     <height>526</height>
    </rect>
   </property>
@@ -39,99 +39,129 @@
         <enum>QLayout::SetDefaultConstraint</enum>
        </property>
        <item>
-        <widget class="QLabel" name="filterLab">
-         <property name="text">
-          <string>Apply filter:</string>
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>ApplyFilter</string>
          </property>
-         <property name="textFormat">
-          <enum>Qt::AutoText</enum>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="2">
+             <widget class="QLineEdit" name="pathInput"/>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="userLab">
+              <property name="text">
+               <string>User:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLineEdit" name="userInput"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="pidLab">
+              <property name="text">
+               <string>PID:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="pidInput"/>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="typeLab">
+              <property name="text">
+               <string>Type:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QComboBox" name="typeBox">
+              <item>
+               <property name="text">
+                <string>all</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>read</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>write</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>execute</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="ruleLab">
+              <property name="text">
+               <string>Rule:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLineEdit" name="ruleInput"/>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="pathLab">
+              <property name="text">
+               <string>Path:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="programLab">
+              <property name="text">
+               <string>Program:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLineEdit" name="execInput"/>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="groupPid">
+            <property name="text">
+             <string>Group by PID</string>
+            </property>
+            <property name="checked">
+             <bool>false</bool>
+            </property>
+            <property name="autoRepeatDelay">
+             <number>301</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QPushButton" name="buttonClear">
+              <property name="text">
+               <string>Clear</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="buttonFilter">
+              <property name="text">
+               <string>Filter</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="2">
-          <widget class="QLineEdit" name="pathInput"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="userLab">
-           <property name="text">
-            <string>User:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLineEdit" name="userInput"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="pidLab">
-           <property name="text">
-            <string>Pid:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2">
-          <widget class="QLineEdit" name="pidInput"/>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="typeLab">
-           <property name="text">
-            <string>Type:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QComboBox" name="typeBox">
-           <item>
-            <property name="text">
-             <string>all</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>read</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>write</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>execute</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="ruleLab">
-           <property name="text">
-            <string>Rule:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="2">
-          <widget class="QLineEdit" name="ruleInput"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="pathLab">
-           <property name="text">
-            <string>Path:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="programLab">
-           <property name="text">
-            <string>Program:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLineEdit" name="execInput"/>
-         </item>
-        </layout>
        </item>
        <item>
         <spacer name="verticalSpacer">
@@ -147,22 +177,90 @@
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QPushButton" name="buttonClear">
-           <property name="text">
-            <string>Clear</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="buttonFilter">
-           <property name="text">
-            <string>Filter</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Order</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QComboBox" name="sortBox">
+            <property name="minimumSize">
+             <size>
+              <width>130</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>by rule name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>by path</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>by user name</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>by command</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>by PID</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="dirBox">
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <item>
+             <property name="text">
+              <string>asc</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>desc</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QPushButton" name="buttonGo">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>50</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Go!</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </item>
